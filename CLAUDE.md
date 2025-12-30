@@ -110,6 +110,17 @@ On 170 DAMIT objects:
 - Alias-aware Acc@10%: 77.1%
 - Alias-aware Acc@20%: 84.1%
 
+## Performance & Experiment Guidelines
+
+- **CPU parallelization**: Use `multiprocessing`, `joblib`, or `concurrent.futures` for CPU-bound tasks
+- **GPU/CUDA**: Leverage GPU acceleration where applicable (PyTorch with CUDA, CuPy, etc.)
+- **Rapid iteration**: Optimize for fast experiment turnaround:
+  - Use caching for expensive computations
+  - Support incremental/resumable runs
+  - Always include progress bars (tqdm)
+  - Design experiments to fail fast on errors
+- **Testing**: Keep test suites fast; use small synthetic datasets for unit tests, reserve full datasets for integration tests
+
 ## Do NOT
 
 - Do not add ML/DL to the period prediction pipeline
