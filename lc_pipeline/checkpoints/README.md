@@ -7,16 +7,16 @@ This directory contains the production model checkpoints for asteroid pole predi
 - **Model**: GeoHierK3Transformer (Single Transformer encoder + attention pooling + mean-pooling across windows)
 - **Training**: 174 DAMIT asteroids (QF>=3), 5-fold cross-validation, multi-epoch training (2,987 epochs)
 - **Performance**: 19.02° +/- 2.68° mean oracle error, 16.61° pooled median (asteroid-level)
-- **ZTF External**: 18.82° +/- 1.06° on 163 asteroids
+- **ZTF External**: 18.82° +/- 1.02° on 163 asteroids
 - **Parameters**: ~994K (d_model=128, n_heads=4, 4 layers, GELU)
 
 ## Files
 
-- `fold_0.pt` - Validates on fold 0 (35 asteroids), oracle=19.51° mean, seed=777
-- `fold_1.pt` - Validates on fold 1 (35 asteroids), oracle=14.88° mean, seed=777
+- `fold_0.pt` - Validates on fold 0 (36 asteroids), oracle=19.51° mean, seed=777
+- `fold_1.pt` - Validates on fold 1 (36 asteroids), oracle=14.88° mean, seed=777
 - `fold_2.pt` - Validates on fold 2 (35 asteroids), oracle=18.32° mean, seed=777
 - `fold_3.pt` - Validates on fold 3 (35 asteroids), oracle=22.05° mean, seed=42
-- `fold_4.pt` - Validates on fold 4 (34 asteroids), oracle=20.34° mean, seed=777
+- `fold_4.pt` - Validates on fold 4 (35 asteroids), oracle=20.34° mean, seed=777
 
 ## Usage
 

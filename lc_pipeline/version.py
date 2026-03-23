@@ -37,10 +37,10 @@ def get_version_info() -> dict:
             '5fold_cross_validation',
         ],
         'checkpoints': [
-            'fold_0.pt (oracle=19.51° mean, 35 val asteroids)',
-            'fold_1.pt (oracle=14.88° mean, 35 val asteroids)',
+            'fold_0.pt (oracle=19.51° mean, 36 val asteroids)',
+            'fold_1.pt (oracle=14.88° mean, 36 val asteroids)',
             'fold_2.pt (oracle=18.32° mean, 35 val asteroids)',
             'fold_3.pt (oracle=22.05° mean, 35 val asteroids, seed=42)',
-            'fold_4.pt (oracle=20.34° mean, 34 val asteroids)',
+            'fold_4.pt (oracle=20.34° mean, 35 val asteroids)',
         ],
     }

@@ -8,7 +8,7 @@ End-to-end pipeline for asteroid pole determination from multi-epoch photometric
 
 **Performance**: **19.02 +/- 2.68 deg** mean oracle error, **16.61 deg** pooled median (5-fold CV, 174 DAMIT asteroids, 2,987 training epochs)
 
-**ZTF External Validation**: **18.82 +/- 1.06 deg** on 163 asteroids
+**ZTF External Validation**: **18.82 +/- 1.02 deg** on 163 asteroids
 
 ---
 
@@ -95,17 +95,17 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for technical details.
 | **Oracle@K=3 Mean** | **19.02 deg** |
 | **Oracle@K=3 Pooled Median** | **16.61 deg** |
 | **Across-Fold Std** | **+/- 2.68 deg** |
-| **ZTF External (163 asteroids)** | **18.82 +/- 1.06 deg** |
+| **ZTF External (163 asteroids)** | **18.82 +/- 1.02 deg** |
 
 **Per-Fold Results**:
 
-| Fold | Val Asteroids | Mean Oracle | Median Oracle |
-|------|---------------|-------------|---------------|
-| 0 | 35 | 19.51 deg | - |
-| 1 | 35 | 14.88 deg | - |
-| 2 | 35 | 18.32 deg | - |
-| 3 | 35 | 22.05 deg | - |
-| 4 | 34 | 20.34 deg | - |
+| Fold | N_train | N_val | Mean Oracle | Median Oracle |
+|------|---------|-------|-------------|---------------|
+| 0 | 138 | 36 | 19.51 deg | 16.77 deg |
+| 1 | 138 | 36 | 14.88 deg | 11.33 deg |
+| 2 | 140 | 35 | 18.32 deg | 16.44 deg |
+| 3 | 141 | 35 | 22.05 deg | 19.41 deg |
+| 4 | 139 | 35 | 20.34 deg | 15.46 deg |
 
 ### Period Estimation
 

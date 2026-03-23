@@ -458,7 +458,7 @@ Changing these breaks checkpoint compatibility.
 |--------|-------|-------|
 | Mean Oracle@K=3 | 19.02° ± 2.68° | Best of 3 poles (asteroid-level) |
 | Pooled Median Oracle@K=3 | 16.61° | Robust estimate |
-| ZTF External | 18.82° ± 1.06° | 163 asteroids |
+| ZTF External | 18.82° ± 1.02° | 163 asteroids |
 
 Candidates are unranked (no quality head). Oracle error represents the best achievable with external selection.
 
