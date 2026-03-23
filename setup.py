@@ -10,7 +10,7 @@ with open("lc_pipeline/version.py") as f:
 setup(
     name="lc_pipeline",
     version=__version__,
-    description="End-to-end pipeline for asteroid pole determination from lightcurve observations",
+    description="DeLPHI: Deep Learning Photometry-based Hypothesis Inference for asteroid pole determination",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     author="Asteroid Lightcurve Pipeline Team",

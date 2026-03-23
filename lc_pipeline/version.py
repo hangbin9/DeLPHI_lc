@@ -16,7 +16,7 @@ def get_version_info() -> dict:
     """Return version metadata as dict."""
     return {
         'version': __version__,
-        'description': 'Asteroid Lightcurve Pipeline (Multi-Epoch Baseline)',
+        'description': 'DeLPHI: Deep Learning Photometry-based Hypothesis Inference',
         'status': 'pre-release',
         'validation_date': '2026-03-23',
         'oracle_error_mean': 19.02,  # degrees (5-fold CV, 174 asteroids, asteroid-level)

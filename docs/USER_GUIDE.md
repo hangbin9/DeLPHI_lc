@@ -1,6 +1,6 @@
-# lc_pipeline User Guide
+# DeLPHI User Guide
 
-Complete guide for using lc_pipeline to predict asteroid rotation poles from lightcurve data.
+Complete guide for using DeLPHI (`lc_pipeline`) to predict asteroid rotation poles from lightcurve data.
 
 ---
 

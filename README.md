@@ -1,10 +1,12 @@
-# Asteroid Lightcurve Pipeline
+# DeLPHI
+
+**Deep Learning Photometry-based Hypothesis Inference**
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-1.12+-ee4c2c.svg)](https://pytorch.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-End-to-end pipeline for asteroid pole determination from multi-epoch photometric lightcurve observations using physics-informed deep learning.
+End-to-end pipeline for asteroid pole determination from multi-epoch photometric lightcurve observations.
 
 > **Note**: This repository is under active development. A companion paper describing the method is in preparation. The code, documentation, and trained models may change before the final release.
 
@@ -312,6 +314,7 @@ result = pipeline.analyze(epochs, "asteroid_101", period_hours=8.5, fold=0)
 Paper in preparation. In the meantime, if you use this code, please cite this repository:
 
 ```
+DeLPHI: Deep Learning Photometry-based Hypothesis Inference
 https://github.com/hangbin9/lc_dl
 ```
 

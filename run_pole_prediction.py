@@ -3,7 +3,7 @@
 run_pole_prediction.py - Run pole prediction on asteroid lightcurve data.
 
 This script provides an easy-to-use interface for running pole predictions on
-asteroid lightcurve data using trained checkpoints from lc_pipeline.
+asteroid lightcurve data using trained DeLPHI checkpoints.
 
 Usage Examples:
     # Simple usage with provided checkpoints

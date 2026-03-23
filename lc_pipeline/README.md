@@ -1,6 +1,6 @@
-# lc_pipeline: Asteroid Lightcurve Analysis
+# DeLPHI (lc_pipeline)
 
-Asteroid period and pole estimation from multi-epoch lightcurves.
+Deep Learning Photometry-based Hypothesis Inference. Asteroid period and pole estimation from multi-epoch lightcurves.
 
 ## Quick Start
 

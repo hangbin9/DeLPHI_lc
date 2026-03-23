@@ -1,6 +1,6 @@
-# lc_pipeline Module Reference
+# DeLPHI Module Reference
 
-Complete file-by-file documentation of the lc_pipeline package.
+Complete file-by-file documentation of the `lc_pipeline` package.
 
 48 Python files. Performance: 19.02° +/- 2.68° mean, 16.61° median oracle error (5-fold CV, 174 DAMIT asteroids, 2,987 training epochs).
 

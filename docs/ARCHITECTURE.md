@@ -1,6 +1,6 @@
-# lc_pipeline Architecture
+# DeLPHI Architecture
 
-Technical documentation of the lc_pipeline system architecture, model design, and implementation.
+Technical documentation of the DeLPHI system architecture, model design, and implementation. The Python package is imported as `lc_pipeline`.
 
 ---
 

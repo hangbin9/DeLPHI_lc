@@ -1,6 +1,6 @@
 # API Reference
 
-Complete API documentation for the lc_pipeline package.
+Complete API documentation for the DeLPHI pipeline (`lc_pipeline` package).
 
 ---
 
