@@ -21,7 +21,7 @@ End-to-end pipeline for asteroid pole determination from multi-epoch photometric
 ### Installation
 
 ```bash
-git clone https://github.com/hangbin9/lc_dl.git
+git clone https://github.com/hangbin9/DeLPHI_lc.git
 cd lc_dl
 pip install -e .
 ```
@@ -315,7 +315,7 @@ Paper in preparation. In the meantime, if you use this code, please cite this re
 
 ```
 DeLPHI: Deep Learning Photometry-based Hypothesis Inference
-https://github.com/hangbin9/lc_dl
+https://github.com/hangbin9/DeLPHI_lc
 ```
 
 **DAMIT Database**: https://astro.troja.mff.cuni.cz/projects/damit/

@@ -20,7 +20,7 @@ setup(
         "lc_pipeline": ["checkpoints/*.pt"],
     },
     python_requires=">=3.8",
-    url="https://github.com/hangbin9/lc_dl",
+    url="https://github.com/hangbin9/DeLPHI_lc",
     install_requires=[
         "numpy",
         "scipy",
