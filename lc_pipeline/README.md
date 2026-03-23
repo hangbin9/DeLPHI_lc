@@ -1,6 +1,6 @@
 # lc_pipeline: Asteroid Lightcurve Analysis
 
-**Production-ready system for asteroid period and pole estimation from multi-epoch lightcurves.**
+Asteroid period and pole estimation from multi-epoch lightcurves.
 
 ## Quick Start
 

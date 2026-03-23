@@ -2,9 +2,6 @@
 
 Technical documentation of the lc_pipeline system architecture, model design, and implementation.
 
-**Version**: 1.0.0
-**Last Updated**: January 11, 2026
-
 ---
 
 ## Table of Contents

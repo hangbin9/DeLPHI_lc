@@ -6,6 +6,8 @@
 
 End-to-end pipeline for asteroid pole determination from multi-epoch photometric lightcurve observations using physics-informed deep learning.
 
+> **Note**: This repository is under active development. A companion paper describing the method is in preparation. The code, documentation, and trained models may change before the final release.
+
 **Performance**: **19.02 +/- 2.68 deg** mean oracle error, **16.61 deg** pooled median (5-fold CV, 174 DAMIT asteroids, 2,987 training epochs)
 
 **ZTF External Validation**: **18.82 +/- 1.02 deg** on 163 asteroids
@@ -307,14 +309,10 @@ result = pipeline.analyze(epochs, "asteroid_101", period_hours=8.5, fold=0)
 
 ## Citation
 
-```bibtex
-@software{asteroid_lc_pipeline,
-  title = {Asteroid Lightcurve Pipeline: Deep Learning for Pole Determination},
-  author = {[Author Names]},
-  year = {2026},
-  url = {https://github.com/hangbin9/lc_dl},
-  note = {19.02 +/- 2.68 deg mean oracle error on 174 DAMIT asteroids (5-fold CV)}
-}
+Paper in preparation. In the meantime, if you use this code, please cite this repository:
+
+```
+https://github.com/hangbin9/lc_dl
 ```
 
 **DAMIT Database**: https://astro.troja.mff.cuni.cz/projects/damit/

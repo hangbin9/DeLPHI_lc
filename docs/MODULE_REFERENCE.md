@@ -2,10 +2,7 @@
 
 Complete file-by-file documentation of the lc_pipeline package.
 
-**Version**: 1.1.0 (Multi-Epoch Baseline, Production)
-**Last Updated**: January 23, 2026
-**Total Files**: 48 Python files (includes multi-epoch training modules)
-**Performance**: 19.02° ± 2.68° mean, 16.61° median oracle error (5-fold CV, 174 DAMIT asteroids, 2,987 training epochs)
+48 Python files. Performance: 19.02° +/- 2.68° mean, 16.61° median oracle error (5-fold CV, 174 DAMIT asteroids, 2,987 training epochs).
 
 ---
 

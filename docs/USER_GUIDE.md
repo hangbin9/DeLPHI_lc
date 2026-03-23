@@ -2,9 +2,6 @@
 
 Complete guide for using lc_pipeline to predict asteroid rotation poles from lightcurve data.
 
-**Version**: 1.0.0
-**Last Updated**: January 11, 2026
-
 ---
 
 ## Table of Contents

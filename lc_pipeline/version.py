@@ -4,7 +4,7 @@ lc_pipeline: Version Information
 Provides version string for the asteroid lightcurve analysis pipeline.
 """
 
-__version__ = "1.1.0"
+__version__ = "0.1.0"
 
 
 def get_version() -> str:
@@ -16,8 +16,8 @@ def get_version_info() -> dict:
     """Return version metadata as dict."""
     return {
         'version': __version__,
-        'description': 'Asteroid Lightcurve Pipeline - Production (Multi-Epoch Baseline)',
-        'status': 'production',
+        'description': 'Asteroid Lightcurve Pipeline (Multi-Epoch Baseline)',
+        'status': 'pre-release',
         'validation_date': '2026-03-23',
         'oracle_error_mean': 19.02,  # degrees (5-fold CV, 174 asteroids, asteroid-level)
         'oracle_error_std': 2.68,  # degrees (across-fold std)
