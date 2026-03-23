@@ -1,0 +1,72 @@
+{
+  "format_version": "1.0",
+  "object_id": "my_asteroid",
+  "coordinate_frame": "EQUATORIAL_J2000",
+  "epochs": [
+    {
+      "epoch_id": 0,
+      "observations": [
+        {
+          "time_jd": 2460000.500,
+          "relative_brightness": 1.02,
+          "sun_asteroid_vector": [0.554, -0.742, 0.479],
+          "earth_asteroid_vector": [0.512, -0.578, 0.614]
+        },
+        {
+          "time_jd": 2460000.520,
+          "relative_brightness": 0.98,
+          "sun_asteroid_vector": [0.554, -0.742, 0.479],
+          "earth_asteroid_vector": [0.512, -0.578, 0.614]
+        },
+        {
+          "time_jd": 2460000.540,
+          "relative_brightness": 0.95,
+          "sun_asteroid_vector": [0.554, -0.742, 0.479],
+          "earth_asteroid_vector": [0.512, -0.578, 0.614]
+        },
+        {
+          "time_jd": 2460000.560,
+          "relative_brightness": 0.93,
+          "sun_asteroid_vector": [0.554, -0.742, 0.479],
+          "earth_asteroid_vector": [0.512, -0.578, 0.614]
+        },
+        {
+          "time_jd": 2460000.580,
+          "relative_brightness": 0.96,
+          "sun_asteroid_vector": [0.554, -0.742, 0.479],
+          "earth_asteroid_vector": [0.512, -0.578, 0.614]
+        },
+        {
+          "time_jd": 2460000.600,
+          "relative_brightness": 1.01,
+          "sun_asteroid_vector": [0.554, -0.742, 0.479],
+          "earth_asteroid_vector": [0.512, -0.578, 0.614]
+        },
+        {
+          "time_jd": 2460000.620,
+          "relative_brightness": 1.05,
+          "sun_asteroid_vector": [0.554, -0.742, 0.479],
+          "earth_asteroid_vector": [0.512, -0.578, 0.614]
+        },
+        {
+          "time_jd": 2460000.640,
+          "relative_brightness": 1.03,
+          "sun_asteroid_vector": [0.554, -0.742, 0.479],
+          "earth_asteroid_vector": [0.512, -0.578, 0.614]
+        },
+        {
+          "time_jd": 2460000.660,
+          "relative_brightness": 0.99,
+          "sun_asteroid_vector": [0.554, -0.742, 0.479],
+          "earth_asteroid_vector": [0.512, -0.578, 0.614]
+        },
+        {
+          "time_jd": 2460000.680,
+          "relative_brightness": 0.94,
+          "sun_asteroid_vector": [0.554, -0.742, 0.479],
+          "earth_asteroid_vector": [0.512, -0.578, 0.614]
+        }
+      ]
+    }
+  ]
+}
