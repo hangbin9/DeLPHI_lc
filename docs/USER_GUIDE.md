@@ -36,7 +36,7 @@ print(f"Period: {result.period.period_hours:.2f} h")
 print(f"Pole: λ={result.best_pole.lambda_deg:.1f}°, β={result.best_pole.beta_deg:.1f}°")
 ```
 
-That's it! 🎉
+That's it.
 
 ---
 
@@ -45,8 +45,8 @@ That's it! 🎉
 ### From Source
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/lc_pipeline.git
-cd lc_pipeline
+git clone https://github.com/hangbin9/DeLPHI_lc.git
+cd DeLPHI_lc
 pip install -e .
 ```
 
@@ -131,29 +131,23 @@ Open `run_pole_prediction.ipynb` for a complete interactive tutorial:
 
 ```bash
 python train_pole_model.py \
-    --data-dir data/my_asteroids \
-    --gt-file data/ground_truth.json \
-    --output models/my_model.pt \
-    --epochs 150 \
-    --batch-size 4 \
-    --lr 1e-3
+    --csv-dir data/damit_csv_qf_ge_3 \
+    --spin-root data/damit_spins_complete \
+    --period-json data/periods.json \
+    --outdir checkpoints_new \
+    --folds 0,1,2,3,4
 ```
 
 ### Hyperparameters
 
-**Training Parameters** (tune these first):
-- `--epochs`: Maximum training epochs (default: 150)
-- `--batch-size`: Batch size, reduce if GPU OOM (default: 4)
-- `--lr`: Learning rate (default: 1e-3)
-- `--patience`: Early stopping patience (default: 25)
+- `--epochs`: Maximum training epochs (default: 200)
+- `--batch-size`: Batch size (default: 32)
+- `--lr`: Learning rate (default: 3e-4)
+- `--patience`: Early stopping patience (default: 50)
+- `--seed`: Random seed (default: 777)
+- `--device`: `cuda` or `cpu` (default: cuda)
 
-**Architecture Parameters** (advanced):
-- `--d-model`: Model dimension (default: 128)
-- `--n-heads`: Attention heads (default: 4)
-- `--n-layers`: Encoder layers (default: 4)
-
-**Loss Parameters** (expert):
-- `--lambda-div`: Diversity loss weight (default: 0.01)
+Model architecture (d_model=128, 4 heads, 4 layers) and loss weights are fixed to production values. See `lc_pipeline/scripts/train_k3.py` for the full set of tunable parameters.
 
 ### Jupyter Notebook Training
 
@@ -468,4 +462,4 @@ df = df[df.iloc[:, 1] > 0]  # Remove negative brightness
 3. Train your own model with custom data
 4. Check [ARCHITECTURE.md](ARCHITECTURE.md) for technical details
 
-**Good luck! 🌟**
+For technical details, see [ARCHITECTURE.md](ARCHITECTURE.md).

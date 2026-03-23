@@ -40,8 +40,9 @@ import numpy as np
 import pandas as pd
 
 try:
-    from lc_pipeline import analyze
+    from lc_pipeline import analyze, LightcurvePipeline
     from lc_pipeline.inference.schema import AnalysisResult
+    from lc_pipeline.inference.pole import PoleConfig
 except ImportError as e:
     print(f"ERROR: Failed to import lc_pipeline: {e}")
     print("\nPlease install lc_pipeline first:")
@@ -308,17 +309,28 @@ def run_single(
 
     print(f"Running analysis...")
     if checkpoint_path:
+        import tempfile
+        import shutil
         print(f"  Using custom checkpoint: {checkpoint_path}")
-        # Note: Custom checkpoint loading requires modifying analyze() to accept checkpoint_path
-        # For now, we'll use fold parameter
-        print("  WARNING: Custom checkpoints not yet supported, using fold parameter")
-
-    result = analyze(
-        epochs=epochs,
-        object_id=object_id,
-        period_hours=period_hours,
-        fold=fold,
-    )
+        # Stage checkpoint as fold_0.pt in a temp directory so the pipeline can load it
+        tmpdir = Path(tempfile.mkdtemp())
+        shutil.copy2(checkpoint_path, tmpdir / "fold_0.pt")
+        config = PoleConfig(checkpoint_dir=tmpdir)
+        pipeline = LightcurvePipeline(pole_config=config)
+        result = pipeline.analyze(
+            epochs=epochs,
+            object_id=object_id,
+            period_hours=period_hours,
+            fold=0,
+        )
+        shutil.rmtree(tmpdir, ignore_errors=True)
+    else:
+        result = analyze(
+            epochs=epochs,
+            object_id=object_id,
+            period_hours=period_hours,
+            fold=fold,
+        )
 
     return result
 

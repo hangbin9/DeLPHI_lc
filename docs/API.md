@@ -25,7 +25,7 @@ def analyze(
 - `epochs`: List of (N, 8) arrays [JD, brightness, sun_xyz, obs_xyz]
 - `object_id`: Asteroid identifier (for logging/caching)
 - `period_hours`: Known period (optional, estimated if not provided)
-- `fold`: Cross-validation fold (0, 1, or 2)
+- `fold`: Cross-validation fold (0-4)
 - `pole_config`: Pole inference configuration (optional)
 - `period_config`: Period estimation configuration (optional)
 
@@ -276,13 +276,13 @@ Neural network pole prediction.
 class PoleInference:
     def __init__(self, config: Optional[PoleConfig] = None)
 
-    def predict_poles(
+    def predict(
         self,
         epochs: List[np.ndarray],
         period_hours: float,
         fold: int = 0,
-        n_candidates: int = 100
-    ) -> List[PoleCandidate]
+        ensemble: bool = False
+    ) -> Tuple[np.ndarray, Optional[np.ndarray]]
 ```
 
 **Example**:
@@ -290,10 +290,8 @@ class PoleInference:
 from lc_pipeline import PoleInference
 
 engine = PoleInference()
-poles = engine.predict_poles(epochs, period_hours=8.5, fold=0)
-
-for pole in poles[:10]:
-    print(f"λ={pole.lambda_deg:.1f}°, β={pole.beta_deg:.1f}°, score={pole.score:.3f}")
+poles, quality = engine.predict(epochs, period_hours=8.5, fold=0)
+# poles: (3, 3) array of unit vectors, quality: None (no quality head)
 ```
 
 ---

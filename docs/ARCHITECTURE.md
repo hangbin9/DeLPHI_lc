@@ -19,7 +19,7 @@ Technical documentation of the DeLPHI system architecture, model design, and imp
 
 ### Design Philosophy
 
-lc_pipeline is a **hybrid classical-ML system** that combines:
+DeLPHI is a **hybrid classical-ML system** that combines:
 - **Classical physics** for period estimation (Lomb-Scargle + Bayesian consensus)
 - **Deep learning** for pole prediction (Hierarchical Transformer with K=3 output)
 

@@ -18,6 +18,8 @@ End-to-end pipeline for asteroid pole determination from multi-epoch photometric
 
 ## Quick Start
 
+For the shortest path to running inference, see [docs/QUICKSTART.md](docs/QUICKSTART.md).
+
 ### Installation
 
 ```bash
@@ -217,6 +219,7 @@ pytest tests/
 
 | Document | Description |
 |----------|-------------|
+| [docs/QUICKSTART.md](docs/QUICKSTART.md) | Fastest way to run inference (Colab or local) |
 | [docs/USER_GUIDE.md](docs/USER_GUIDE.md) | Installation, usage, data preparation, troubleshooting |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Model architecture and design decisions |
 | [docs/DATA_FORMAT.md](docs/DATA_FORMAT.md) | Input data schema and format reference |

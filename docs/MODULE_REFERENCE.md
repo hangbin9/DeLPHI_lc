@@ -43,7 +43,7 @@ Pydantic data schema defining the unified lightcurve format. Includes `Observati
 Conditioning probes to verify model produces different outputs for different inputs. Includes `inter_object_diversity_probe()` and `run_conditioning_probes()`.
 
 ### `version.py`
-Package version string: `__version__ = "1.1.0"`. Includes metadata about v1.1 multi-epoch baseline performance.
+Package version string: `__version__ = "0.1.0"`. Includes metadata about v1.1 multi-epoch baseline performance.
 
 ### `example_usage.py`
 Runnable usage examples demonstrating inference, period estimation, and training workflows.
