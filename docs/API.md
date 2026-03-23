@@ -443,6 +443,6 @@ def process_asteroid(
 
 ## Next Steps
 
-- See [USAGE.md](USAGE.md) for practical examples
-- See [EXAMPLES.md](EXAMPLES.md) for complete code snippets
-- See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for common issues
+- See [USER_GUIDE.md](USER_GUIDE.md) for practical examples and troubleshooting
+- See [examples/](../examples/) for sample input files
+- See [DATA_FORMAT.md](DATA_FORMAT.md) for input data specification

@@ -86,7 +86,7 @@ python run_pole_prediction.py --input-dir asteroids/ --output results.json
 python run_pole_prediction.py --input asteroid_101.csv --period 8.5
 ```
 
-See [README_SCRIPTS.md](../README_SCRIPTS.md) for complete documentation.
+Run `python run_pole_prediction.py --help` for all options.
 
 ### Python API
 
@@ -186,7 +186,7 @@ Open `train_pole_model.ipynb` for interactive training in Google Colab:
    }
    ```
 
-See [DATA.md](DATA.md) for complete format specification.
+See [DATA_FORMAT.md](DATA_FORMAT.md) for complete format specification.
 
 ---
 
@@ -457,7 +457,7 @@ df = df[df.iloc[:, 1] > 0]  # Remove negative brightness
 
 ## Getting Help
 
-- **Documentation**: Check [API.md](API.md), [DATA.md](DATA.md), [ARCHITECTURE.md](ARCHITECTURE.md)
+- **Documentation**: Check [API.md](API.md), [DATA_FORMAT.md](DATA_FORMAT.md), [ARCHITECTURE.md](ARCHITECTURE.md)
 - **Examples**: See `examples/` directory and notebooks
 - **Issues**: Report bugs on GitHub
 - **Questions**: Open a discussion on GitHub
