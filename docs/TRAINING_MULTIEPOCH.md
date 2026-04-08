@@ -4,14 +4,14 @@ This guide explains how to use multi-epoch training for improved pole prediction
 
 ## Overview
 
-Multi-epoch training treats each observing epoch as a separate training sample instead of aggregating all epochs per asteroid. This "vertical expansion" increases training data by 17.2x while maintaining the same asteroid population.
+Multi-epoch training treats each observing epoch as a separate training sample instead of aggregating all epochs per asteroid. This "vertical expansion" increases training data by 16.9x while maintaining the same asteroid population.
 
 **Key Benefits:**
-- **17.2x more training samples**: 174 asteroids -> 2,987 training epochs
+- **16.9x more training samples**: 177 asteroids -> 2,989 training epochs
 - **Reduced overfitting**: 75% -> 5.4% training loss drop (93% improvement)
 - **Faster convergence**: 14 epochs vs 150 (10.7x faster)
-- **Better performance**: 19.02 deg mean oracle error (+-2.68 deg across-fold std)
-- **More consistent**: +-2.68 deg vs +-12.39 deg across-fold std
+- **Better performance**: 18.49 deg vs 19.49 deg mean oracle error (5.1% improvement)
+- **More consistent**: +-2.29 deg vs +-12.39 deg across-fold std (81% improvement)
 
 ---
 
@@ -29,7 +29,8 @@ python -m lc_pipeline.scripts.train_k3 \
     --device cuda \
     --seed 777 \
     --epochs 50 \
-    --patience 50
+    --patience 15 \
+    --enable-quality-head
 ```
 
 The default mode is now `single_epoch`, so you don't need to specify `--dataset-mode`.
@@ -75,8 +76,8 @@ Each epoch represents a separate observing campaign or apparition:
 ### Data Expansion
 
 ```
-v1.0 (aggregated):     174 asteroids × 1 sample = 174 training samples
-v1.1 (single_epoch):   174 asteroids × 17.2 epochs = 2,987 training samples
+v1.0 (aggregated):     177 asteroids × 1 sample = 177 training samples
+v1.1 (single_epoch):   177 asteroids × 16.9 epochs = 2,989 training samples
 ```
 
 The key insight is that each epoch provides independent evidence about the pole:
@@ -89,7 +90,7 @@ The key insight is that each epoch provides independent evidence about the pole:
 Crucially, the CV split is done by **asteroid ID**, not by epoch:
 
 ```
-Fold 0: Train on asteroids 1-140, Validate on asteroids 141-174
+Fold 0: Train on asteroids 1-140, Validate on asteroids 141-177
         (Train epochs: ~2,370, Val epochs: ~619)
 ```
 
@@ -186,9 +187,9 @@ print(f"Oracle median: {results['oracle_error_median_deg']:.2f}")
 
 | Metric | Aggregated | Single-Epoch | Improvement |
 |--------|------------|--------------|-------------|
-| Oracle Mean | 19.49 deg +- 12.39 deg | **19.02 deg +- 2.68 deg** | 2.4% better |
-| Oracle Median | 17.41 deg | **16.61 deg** | 4.6% better |
-| Training Samples | 174 | **~2,987** | ~17.2x more |
+| Oracle Mean | 19.49 deg +- 12.39 deg | **18.14 deg +- 2.18 deg** | 6.9% better |
+| Oracle Median | 17.41 deg | **15.61 deg** | 10.3% better |
+| Training Samples | 177 | **~2,500-2,600** | ~15x more |
 | Training Epochs | ~150 | **17-26** | ~6-9x faster |
 | Train Loss Drop | 75% | **<5%** | 93% less overfitting |
 
@@ -203,7 +204,7 @@ Trained using `lc_pipeline.scripts.train_k3` with `--dataset-mode single_epoch`:
 | 2 | 35 | 586 | 18.75° | 15.29° | 17 |
 | 3 | 35 | 603 | 20.70° | 19.20° | 17 |
 | 4 | 35 | 503 | 17.46° | 17.44° | 22 |
-| **Mean** | **35** | **610** | **19.02° ± 2.68°** | **16.61°** | **22** |
+| **Mean** | **35** | **610** | **18.14° ± 2.18°** | **15.61° ± 3.31°** | **22** |
 
 **Notes:**
 - All metrics computed at **asteroid level** using `average` aggregation across epochs
@@ -297,5 +298,6 @@ python -m lc_pipeline.scripts.train_k3 --seed 777 --folds 0 ...
 
 ## See Also
 
+- [CLAUDE.md](../CLAUDE.md) - Project overview
 - [MODULE_REFERENCE.md](MODULE_REFERENCE.md) - API documentation
-- [ARCHITECTURE.md](ARCHITECTURE.md) - Model architecture details
+- [experiments/multi_epoch_expansion/](../experiments/multi_epoch_expansion/) - Validation experiments

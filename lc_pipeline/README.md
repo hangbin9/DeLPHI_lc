@@ -1,49 +1,35 @@
-# DeLPHI (lc_pipeline)
+# lc_pipeline Package Notes
 
-Deep Learning Photometry-based Hypothesis Inference. Asteroid period and pole estimation from multi-epoch lightcurves.
+This directory contains the Python package for the DeLPHI asteroid lightcurve pipeline.
 
-## Quick Start
+For most users, start with the repository-level docs instead of this file:
+
+- [../README.md](../README.md)
+- [../docs/USER_GUIDE.md](../docs/USER_GUIDE.md)
+
+## What The Package Provides
+
+- end-to-end `analyze()` API
+- pre-trained fold checkpoints under `lc_pipeline/checkpoints/`
+- classical period estimation
+- multi-candidate pole prediction
+- unified JSON schema and loaders
+
+## Quick Python Example
 
 ```python
+import pandas as pd
 from lc_pipeline import analyze
 
-result = analyze(epochs, "asteroid_1017", fold=0)
+df = pd.read_csv("examples/asteroid_101.csv", comment="#")
+result = analyze([df.values], "asteroid_101", fold=0)
 
-print(f"Period: {result.period.period_hours:.2f} h")
-print(f"Best pole: lambda={result.best_pole.lambda_deg:.1f}, beta={result.best_pole.beta_deg:.1f}")
-
-# All candidates (6-9 total, unranked)
-for pole in result.poles:
-    print(f"  lambda={pole.lambda_deg:.1f}, beta={pole.beta_deg:.1f}, alias={pole.alias}")
+print(result.period.period_hours)
+print(result.best_pole.lambda_deg, result.best_pole.beta_deg)
 ```
 
-## Performance
+## Related Docs
 
-**5-Fold Cross-Validation on 174 DAMIT QF>=3 asteroids:**
-
-| Metric | Value |
-|--------|-------|
-| Mean Oracle Error | **19.02 deg** |
-| Pooled Median | **16.61 deg** |
-| Across-Fold Std | +/- 2.68 deg |
-| ZTF External (163 asteroids) | **18.82 deg** |
-
-## Architecture
-
-- **Stage 1**: Period estimation (Lomb-Scargle + Bayesian consensus)
-- **Stage 2**: Pole prediction (Transformer, d_model=128, 4 layers, 4 heads, ~994K params)
-- 13-feature tokenization (3 temporal + 6 geometry zeros + 4 period)
-- K=3 unranked pole candidates per period alias
-- Period alias expansion (P, 2P, P/2)
-
-## Checkpoints
-
-| File | Oracle Mean |
-|------|------------|
-| fold_0.pt | 19.51 deg |
-| fold_1.pt | 14.88 deg |
-| fold_2.pt | 18.32 deg |
-| fold_3.pt | 22.05 deg |
-| fold_4.pt | 20.34 deg |
-
-See the top-level README.md for full documentation.
+- [../docs/API.md](../docs/API.md)
+- [../docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md)
+- [../docs/DATA_FORMAT.md](../docs/DATA_FORMAT.md)

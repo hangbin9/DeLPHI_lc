@@ -204,7 +204,11 @@ def format_result_console(result: AnalysisResult) -> str:
     lines.append("")
 
     # All candidates
-    lines.append(f"All {len(result.poles)} candidates (3 periods × 3 poles):")
+    alias_names = sorted({pole.alias for pole in result.poles})
+    lines.append(
+        f"All {len(result.poles)} candidates "
+        f"({len(alias_names)} period aliases × 3 pole slots):"
+    )
     lines.append(f"{'#':<3} {'Alias':<8} {'Period':<9} {'λ':<8} {'β':<8} {'Score':<6}")
     lines.append("-" * 50)
 

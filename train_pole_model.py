@@ -3,8 +3,8 @@
 train_pole_model.py - Train a DeLPHI pole prediction model on asteroid lightcurve data.
 
 This script trains the GeoHierK3Transformer model using multi-epoch training on
-DAMIT lightcurve data. It uses the same training logic that produced the shipped
-checkpoints.
+DAMIT lightcurve data. It uses the same training logic that produced the
+pre-trained checkpoints.
 
 Requirements:
     - DAMIT lightcurve CSV files (8 columns: time, brightness, sun_xyz, obs_xyz)

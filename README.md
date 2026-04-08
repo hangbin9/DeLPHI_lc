@@ -2,329 +2,159 @@
 
 **Deep Learning Photometry-based Hypothesis Inference**
 
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-1.12+-ee4c2c.svg)](https://pytorch.org/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+`lc_pipeline` is the Python package for DeLPHI, a two-stage pipeline for asteroid lightcurve analysis:
 
-End-to-end pipeline for asteroid pole determination from multi-epoch photometric lightcurve observations.
+1. estimate the rotation period from photometry with a classical Lomb-Scargle based method
+2. predict multiple candidate spin-axis directions with a Transformer model
 
-> **Note**: This repository is under active development. A companion paper describing the method is in preparation. The code, documentation, and trained models may change before the final release.
+The package is designed to help a user narrow the search space before running a full classical inversion workflow.
 
-**Performance**: **19.02 +/- 2.68 deg** mean oracle error, **16.61 deg** pooled median (5-fold CV, 174 DAMIT asteroids, 2,987 training epochs)
+## Status
 
-**ZTF External Validation**: **18.82 +/- 1.02 deg** on 163 asteroids
+> **Note**: This repository is under active development. A companion paper describing the method is in preparation.
 
----
+## Published Results
+
+These are the results reported in [paper/manuscript.tex](paper/manuscript.tex) for the published configuration:
+
+- **5-fold cross-validation on 174 DAMIT asteroids**:
+  - mean oracle error: **19.02° ± 2.68°**
+  - pooled median oracle error: **16.61°**
+- **End-to-end pipeline with estimated periods**:
+  - mean oracle error: **18.90°**
+  - median oracle error: **17.25°**
+- **Period estimation on the same 174 asteroids**:
+  - median alias-aware relative error: **5.3%**
+- **External validation on 163 ZTF asteroids**:
+  - mean oracle error: **18.82° ± 1.02°**
+  - median oracle error: **16.31°**
+- **Runtime**:
+  - approximately **0.3 s per asteroid** on a single RTX 4070 GPU
+
+Important context:
+
+- The model outputs **unranked hypotheses**. The package displays them sorted by a heuristic score, but the top candidate is not guaranteed to be the correct pole.
+- The main paper metric is an **oracle** metric: it measures how good the best candidate is in hindsight.
 
 ## Quick Start
 
-For the shortest path to running inference, see [docs/QUICKSTART.md](docs/QUICKSTART.md).
-
-### Installation
+### 1. Install
 
 ```bash
 git clone https://github.com/hangbin9/DeLPHI_lc.git
-cd lc_dl
+cd DeLPHI_lc
 pip install -e .
 ```
 
-Verify the installation:
+### 2. Verify the install
 
 ```bash
-python -c "from lc_pipeline import analyze; print('Ready')"
+python -c "from lc_pipeline import analyze, __version__; print(__version__)"
 ```
 
-**Requirements**: Python 3.8+, PyTorch 1.12+, ~70 MB disk space (includes 5 pre-trained checkpoints)
+### 3. Run on the example file
 
-### Basic Usage
+```bash
+python run_pole_prediction.py --input examples/asteroid_101.csv
+```
+
+This uses the pre-trained checkpoints in `lc_pipeline/checkpoints/`.
+
+### 4. Run on your own CSV file
+
+```bash
+python run_pole_prediction.py --input my_asteroid.csv
+```
+
+Expected CSV columns:
+
+```text
+time_jd,brightness,sun_x,sun_y,sun_z,obs_x,obs_y,obs_z
+```
+
+If you already know the rotation period, you can skip period estimation:
+
+```bash
+python run_pole_prediction.py --input my_asteroid.csv --period 8.5
+```
+
+## Python Example
 
 ```python
+import pandas as pd
 from lc_pipeline import analyze
-import numpy as np
 
-# Load lightcurve data (DAMIT 8-column CSV format)
-data = np.loadtxt("asteroid_101.csv", delimiter=',', skiprows=1)
-epochs = [data]
+df = pd.read_csv("examples/asteroid_101.csv", comment="#")
+epochs = [df.values]
 
-# Run analysis (period estimation + pole prediction)
 result = analyze(epochs, "asteroid_101", fold=0)
 
-# Results
-print(f"Period: {result.period.period_hours:.2f} +/- {result.period.uncertainty_hours:.2f} h")
-print(f"Best pole: lambda={result.best_pole.lambda_deg:.1f} deg, beta={result.best_pole.beta_deg:.1f} deg")
-
-# All 9 candidates (3 period aliases x 3 poles)
-for i, pole in enumerate(result.poles, 1):
-    print(f"  {i}. lambda={pole.lambda_deg:.1f}, beta={pole.beta_deg:.1f}, "
-          f"P={pole.period_hours:.2f}h ({pole.alias})")
+print(f"Period: {result.period.period_hours:.2f} ± {result.period.uncertainty_hours:.2f} h")
+print(f"Top candidate: λ={result.best_pole.lambda_deg:.1f}°, β={result.best_pole.beta_deg:.1f}°")
+print(f"Returned candidates: {len(result.poles)}")
 ```
 
-If you already know the rotation period, pass it directly to skip period estimation:
+## What The Pipeline Returns
 
-```python
-result = analyze(epochs, "asteroid_101", period_hours=8.5, fold=0)
-```
+The package returns:
 
-See [examples/](examples/) for sample input files.
+- a period estimate with uncertainty
+- **6 to 9** pole candidates
+- antipodal equivalents for each pole direction
+- simple uncertainty summaries (`spread_deg`, `confidence`)
 
----
+Why 6 to 9 candidates:
 
-## How It Works
+- the model predicts **3 pole hypotheses**
+- inference tests the base period `P` and `2P`
+- it also tests `P/2` when the base period is at least `8 h`
 
-This pipeline combines classical physics with deep learning in two stages:
+Practical guidance:
 
-**Stage 1: Period Estimation** (Classical Bayesian)
-- Multi-epoch Lomb-Scargle periodogram analysis
-- Product-of-experts posterior fusion across epochs
-- Output: period with 95% credible interval
-- Median error: 5.3% (alias-aware)
+- inspect more than the top-ranked candidate
+- treat the antipode as physically equivalent unless you have external constraints
+- use external information, classical inversion, radar, or occultations to choose among candidates
 
-**Stage 2: Pole Prediction** (Deep Learning)
-- Transformer neural network (d_model=128, 4 layers, 4 heads, ~994K parameters)
-- 13-dimensional feature space per observation:
-  - 3 temporal features (normalized time, time delta, normalized brightness)
-  - 6 geometry slots (set to zeros by design)
-  - 4 period features (rotation phase sin/cos, log period, cumulative rotations)
-- K=3 pole hypotheses (unranked, evaluated by oracle selection)
-- Period alias expansion: P, 2P, and P/2 (if P >= 8h) give 6-9 total candidates
+## Minimum Data Guidance
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for technical details.
+From the manuscript and the production pipeline behavior:
 
----
+- hard minimum per observing epoch for pole inference: **3 observations**
+- hard minimum per observing epoch for period estimation: **10 observations**
+- validated period range: **2.4 to 67.5 h**
+- search range used by the pre-trained period estimator: **2 to 200 h**
+- best results come from **multiple apparitions / observing epochs**
 
-## Performance
-
-### DAMIT Cross-Validation (174 QF>=3 Asteroids, 5-Fold)
-
-| Metric | Value |
-|--------|-------|
-| **Oracle@K=3 Mean** | **19.02 deg** |
-| **Oracle@K=3 Pooled Median** | **16.61 deg** |
-| **Across-Fold Std** | **+/- 2.68 deg** |
-| **ZTF External (163 asteroids)** | **18.82 +/- 1.02 deg** |
-
-**Per-Fold Results**:
-
-| Fold | N_train | N_val | Mean Oracle | Median Oracle |
-|------|---------|-------|-------------|---------------|
-| 0 | 138 | 36 | 19.51 deg | 16.77 deg |
-| 1 | 138 | 36 | 14.88 deg | 11.33 deg |
-| 2 | 140 | 35 | 18.32 deg | 16.44 deg |
-| 3 | 141 | 35 | 22.05 deg | 19.41 deg |
-| 4 | 139 | 35 | 20.34 deg | 15.46 deg |
-
-### Period Estimation
-
-| Metric | Value |
-|--------|-------|
-| Median alias-aware error | 5.3% |
-| Success rate | 100% (174/174) |
-
-### Computational
-
-| Task | Time |
-|------|------|
-| Inference (single asteroid) | ~0.3s |
-| Training (per fold, GPU) | ~5 min |
-| Training epochs to convergence | median 6 (range 1-41) |
-
----
-
-## Data Requirements
-
-### Input Format
-
-The pipeline accepts DAMIT-style lightcurve data as numpy arrays with 8 columns:
-
-| Column | Description |
-|--------|-------------|
-| 0 | Julian Date (time) |
-| 1 | Relative brightness |
-| 2-4 | Sun position vector (x, y, z) |
-| 5-7 | Observer position vector (x, y, z) |
-
-Each observing epoch is a separate numpy array. Pass a list of epoch arrays to `analyze()`.
-
-### Downloading DAMIT Data
-
-Training and replication require data from the [DAMIT database](https://astro.troja.mff.cuni.cz/projects/damit/).
-
-1. Visit https://astro.troja.mff.cuni.cz/projects/damit/
-2. Download lightcurve data for asteroids with Quality Flag >= 3
-3. Download spin solutions (pole orientations) for ground truth
-
-Place the data in a `data/` directory (excluded from git by default):
-
-```
-data/
-├── damit_csv_qf_ge_3/              # Lightcurve CSV files (one per asteroid)
-│   ├── asteroid_101.csv
-│   ├── asteroid_102.csv
-│   └── ...
-├── damit_spins_complete/            # Ground truth pole solutions (JSON)
-│   ├── asteroid_101.json
-│   ├── asteroid_102.json
-│   └── ...
-└── periods.json                     # Rotation periods: {"asteroid_101": 8.34, ...}
-```
-
-See [docs/USER_GUIDE.md](docs/USER_GUIDE.md) for detailed data preparation instructions.
-
----
-
-## Command-Line Scripts
-
-### Inference
-
-```bash
-# Single asteroid
-python run_pole_prediction.py --input examples/asteroid_101.csv
-
-# With known period
-python run_pole_prediction.py --input examples/asteroid_101.csv --period 8.5
-
-# Batch processing
-python run_pole_prediction.py --input-dir my_asteroids/ --output results.json --format json
-```
-
-### Training
-
-```bash
-# Train all 5 folds (production recipe, ~25 min on GPU)
-python train_pole_model.py \
-    --csv-dir data/damit_csv_qf_ge_3 \
-    --spin-root data/damit_spins_complete \
-    --period-json data/periods.json \
-    --outdir checkpoints_new \
-    --folds 0,1,2,3,4
-
-# Single fold for testing
-python train_pole_model.py \
-    --csv-dir data/damit_csv_qf_ge_3 \
-    --spin-root data/damit_spins_complete \
-    --period-json data/periods.json \
-    --outdir test_output \
-    --folds 0 --epochs 5
-```
-
-### Tests
-
-```bash
-pytest tests/
-```
-
----
+The manuscript’s degradation study shows that the pipeline works best when data cover multiple apparitions. A single dense night is usually less informative than sparser coverage across different viewing geometries.
 
 ## Documentation
 
-| Document | Description |
-|----------|-------------|
-| [docs/QUICKSTART.md](docs/QUICKSTART.md) | Fastest way to run inference (Colab or local) |
-| [docs/USER_GUIDE.md](docs/USER_GUIDE.md) | Installation, usage, data preparation, troubleshooting |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Model architecture and design decisions |
-| [docs/DATA_FORMAT.md](docs/DATA_FORMAT.md) | Input data schema and format reference |
-| [docs/MODULE_REFERENCE.md](docs/MODULE_REFERENCE.md) | File-by-file module reference |
-| [docs/API.md](docs/API.md) | Python API reference |
-| [docs/TRAINING_MULTIEPOCH.md](docs/TRAINING_MULTIEPOCH.md) | Multi-epoch training details |
+- [docs/QUICKSTART.md](docs/QUICKSTART.md): fastest path to running inference
+- [docs/USER_GUIDE.md](docs/USER_GUIDE.md): step-by-step beginner guide
+- [docs/DATA_FORMAT.md](docs/DATA_FORMAT.md): input schema and examples
+- [docs/API.md](docs/API.md): public Python API
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): technical overview of the production model
+- [docs/MODULE_REFERENCE.md](docs/MODULE_REFERENCE.md): package/module map
+- [examples/README.md](examples/README.md): example files and quick commands
 
----
+## Training
 
-## Project Structure
+- `run_pole_prediction.py` is the recommended entry point for inference.
+- `train_pole_model.py` trains the GeoHierK3Transformer model using 5-fold cross-validation.
+- See [docs/TRAINING_MULTIEPOCH.md](docs/TRAINING_MULTIEPOCH.md) for multi-epoch training details.
 
+## Project Layout
+
+```text
+.
+├── README.md
+├── run_pole_prediction.py
+├── train_pole_model.py
+├── docs/
+├── examples/
+└── lc_pipeline/
 ```
-lc_dl/
-├── README.md                    # This file
-├── setup.py                     # Package installation
-├── requirements.txt             # Python dependencies
-├── run_pole_prediction.py       # Command-line inference script
-├── train_pole_model.py          # Command-line training script
-├── *.ipynb                      # Colab notebooks
-│
-├── docs/                        # Documentation
-├── examples/                    # Sample input files
-├── tests/                       # Tests with bundled fixtures
-│
-└── lc_pipeline/                 # Main package
-    ├── __init__.py              # Public API
-    ├── schema.py                # Data schema (Pydantic)
-    ├── inference/               # End-to-end inference pipeline
-    ├── period/                  # Period estimation (Lomb-Scargle + Bayesian)
-    ├── models/                  # Neural network (GeoHierK3Transformer)
-    ├── training/                # Loss functions
-    ├── evaluation/              # Metrics and evaluation
-    ├── data/                    # Dataset classes
-    ├── physics/                 # Geometry and coordinate transforms
-    ├── converters/              # Data format conversion
-    ├── utils/                   # Utilities
-    ├── scripts/                 # Internal training/eval scripts
-    └── checkpoints/             # Pre-trained models (5 folds, ~12 MB each)
-```
-
-See [docs/MODULE_REFERENCE.md](docs/MODULE_REFERENCE.md) for file-by-file documentation.
-
----
-
-## Advanced Usage
-
-### Period Estimation Only
-
-```python
-from lc_pipeline import ConsensusEngine
-
-engine = ConsensusEngine()
-# epochs: list of (N, 8) numpy arrays
-period_result = engine.predict_single(epochs, "asteroid_101")
-print(f"Period: {period_result['period']:.2f} h")
-```
-
-### Pole Prediction with Known Period
-
-```python
-from lc_pipeline import PoleInference
-
-inf = PoleInference()
-poles, quality = inf.predict(epochs, period_hours=8.5, fold=0)
-# poles: list of 3 unit vectors [(x, y, z), ...]
-```
-
-### Using the Pipeline Class
-
-```python
-from lc_pipeline import LightcurvePipeline
-
-pipeline = LightcurvePipeline()
-result = pipeline.analyze(epochs, "asteroid_101", period_hours=8.5, fold=0)
-```
-
----
-
-## Known Limitations
-
-1. **Geometry features disabled by design**: The 6 geometry slots in the 13-feature input are set to zeros. Experiments showed this performs better than active geometry on DAMIT data.
-
-2. **Candidates are unranked**: The model outputs K=3 pole candidates without quality scores. Users should evaluate all candidates using external constraints (radar, occultations, etc.).
-
-3. **Period alias ambiguity**: Symmetric lightcurves make P vs 2P indistinguishable. The pipeline returns candidates for multiple period aliases (6-9 total).
-
-4. **Training data scope**: Validated on 174 DAMIT asteroids (QF>=3). Performance on other populations may vary.
-
-5. **Pole latitude effect**: Equator-on asteroids (low ecliptic latitude |beta|) have inherently higher errors (~45 deg) due to geometric ambiguity. This is a physical limitation, not a model deficiency.
-
----
 
 ## Citation
 
-Paper in preparation. In the meantime, if you use this code, please cite this repository:
-
-```
-DeLPHI: Deep Learning Photometry-based Hypothesis Inference
-https://github.com/hangbin9/DeLPHI_lc
-```
-
-**DAMIT Database**: https://astro.troja.mff.cuni.cz/projects/damit/
-
----
-
-## License
-
-MIT License - see [LICENSE](LICENSE) file
+If you cite the package, cite the manuscript and describe the software as the `lc_pipeline` implementation of DeLPHI.

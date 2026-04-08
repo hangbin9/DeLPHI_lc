@@ -77,11 +77,11 @@ See `examples/asteroid_101.csv` for a working example.
 
 ## Output
 
-The pipeline returns 6-9 pole candidates (unranked):
+The pipeline returns 6-9 pole candidates:
 - 2-3 period aliases (P, 2P, and P/2 if P >= 8h)
 - 3 poles per alias (K=3 multiple hypothesis output)
 
-Each candidate has ecliptic longitude (lambda) and latitude (beta). The candidates are not ranked by the model. If you have external constraints (radar, occultations, other inversions), use them to select among the candidates.
+Each candidate has ecliptic longitude (lambda) and latitude (beta). The model outputs unranked hypotheses. The package displays them sorted by a heuristic score, but the top candidate is not guaranteed to be the correct pole. Use external constraints (radar, occultations, other inversions) to select among candidates.
 
 ## What Next
 
